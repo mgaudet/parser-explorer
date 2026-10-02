@@ -1,0 +1,30 @@
+{
+  "name": "spidermonkey-parse-tree-demo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Interactive SpiderMonkey parse-tree explorer running a WASI build of the real JS shell",
+  "scripts": {
+    "build": "webpack",
+    "serve": "python3 -m http.server 8000 --directory docs"
+  },
+  "browserslist": [
+    "last 1 chrome version",
+    "last 1 firefox version",
+    "last 1 safari version"
+  ],
+  "devDependencies": {
+    "copy-webpack-plugin": "^11.0.0",
+    "css-loader": "^6.7.2",
+    "file-loader": "^6.2.0",
+    "html-webpack-plugin": "^5.3.1",
+    "style-loader": "^3.3.1",
+    "webpack": "^5.75.0",
+    "webpack-cli": "^5.0.0"
+  },
+  "dependencies": {
+    "@wasmer/wasi": "^0.12.0",
+    "@wasmer/wasmfs": "^0.12.0",
+    "monaco-editor": "^0.34.1",
+    "monaco-editor-webpack-plugin": "^7.0.1"
+  }
+}

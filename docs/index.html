@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>SpiderMonkey Parse Tree Explorer</title>
+<script defer src="js/main.js"></script>
+</head>
+<body>
+<div id="app">
+  <header id="topbar">
+    <h1>SpiderMonkey Parse Tree Explorer</h1>
+    <span class="sep"></span>
+    <select id="examples" title="Load an example">
+      <option value="">Examples…</option>
+    </select>
+    <label id="module-toggle" title="Parse the source as a module rather than a script">
+      <input type="checkbox" id="as-module"> module
+    </label>
+    <span id="status"></span>
+  </header>
+
+  <main id="panes">
+    <section id="left">
+      <div class="pane-title">Source</div>
+      <div id="editor"></div>
+    </section>
+    <div id="splitter" title="Drag to resize"></div>
+    <section id="right">
+      <div class="pane-title">
+        Parse tree
+        <span id="tree-meta"></span>
+        <span class="spacer"></span>
+        <button id="expand-all" type="button">Expand all</button>
+        <button id="collapse-all" type="button">Collapse all</button>
+      </div>
+      <div id="tree"></div>
+    </section>
+  </main>
+
+  <footer id="outputbar">
+    <div class="pane-title">
+      Shell output
+      <span class="spacer"></span>
+      <button id="clear-output" type="button">Clear</button>
+    </div>
+    <pre id="error"></pre>
+    <pre id="output"></pre>
+  </footer>
+</div>
+</body>
+</html>

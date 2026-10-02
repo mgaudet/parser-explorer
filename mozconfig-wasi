@@ -1,0 +1,35 @@
+# WASI (wasm32-wasi) JS shell build for the SpiderMonkey parse-tree demo.
+#
+# Uses the clang and wasi sysroot from the mozbuild state dir, which
+# `mach bootstrap` populates, so no separate wasi-sdk download is needed.
+# Override MOZBUILD_STATE_PATH below if your state dir is elsewhere.
+#
+# The target triple and --sysroot are added to the target compiler by
+# configure; CC/CXX only select which clang to use and deliberately leave
+# HOST_CC alone so host tools keep building natively.
+#
+# Rust's wasm32-wasip1 std must be available to the rustc used here.
+
+MOZBUILD="${MOZBUILD_STATE_PATH:-$HOME/.mozbuild}"
+
+MOZ_WASI_SYSROOT="$MOZBUILD/sysroot-wasm32-wasi"
+# Host tools link against the bootstrapped host sysroot, which carries the
+# libgcc and crt objects that a bare clang install cannot find.
+MOZ_HOST_SYSROOT="$MOZBUILD/sysroot-$(uname -m | sed 's/x86_64/x86_64-linux-gnu/; s/aarch64/aarch64-linux-gnu/')"
+
+ac_add_options --target=wasm32-wasi
+ac_add_options --enable-project=js
+ac_add_options --without-intl-api
+ac_add_options --without-system-zlib
+ac_add_options --disable-jit
+ac_add_options --disable-shared-js
+ac_add_options --disable-tests
+ac_add_options --enable-optimize
+ac_add_options --disable-debug
+ac_add_options --with-sysroot="$MOZ_WASI_SYSROOT"
+ac_add_options --with-host-sysroot="$MOZ_HOST_SYSROOT"
+
+export CC="$MOZBUILD/clang/bin/clang"
+export CXX="$MOZBUILD/clang/bin/clang++"
+export CBINDGEN="$MOZBUILD/cbindgen/cbindgen"
+export PKG_CONFIG="$MOZBUILD/pkgconf/pkg-config"
