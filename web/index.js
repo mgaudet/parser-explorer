@@ -1,5 +1,6 @@
 import * as monaco from 'monaco-editor';
 import { renderTree, countNodes } from './tree.js';
+import { EXAMPLES, EXAMPLE_MODULE_GOAL } from './examples.js';
 import './style.css';
 
 self.MonacoEnvironment = {
@@ -21,65 +22,6 @@ function greet(name) {
 greet("world");
 `;
 
-const EXAMPLES = {
-  'Arithmetic and precedence': `1 + 2 * 3 - 4 / 2;
-`,
-  'Associative operators': `// The parser builds a left-leaning tree for
-// associative operators like + and &&.
-a + b + c + d;
-x && y && z;
-`,
-  'Functions and arrow bodies': `function outer(a, b = 1) {
-  return (x) => x * a + b;
-}
-`,
-  'Destructuring': `const { a, b: { c } } = obj;
-const [first, , ...rest] = list;
-`,
-  'Classes': `class Point {
-  static origin = new Point(0, 0);
-  #hidden = 1;
-  constructor(x, y) {
-    this.x = x;
-    this.y = y;
-  }
-  get length() { return Math.hypot(this.x, this.y); }
-}
-`,
-  'Control flow': `for (const x of items) {
-  if (x > 0) {
-    continue;
-  } else {
-    break;
-  }
-}
-switch (v) {
-  case 1: f(); break;
-  default: g();
-}
-`,
-  'try / catch / finally': `try {
-  risky();
-} catch (e) {
-  handle(e);
-} finally {
-  cleanup();
-}
-`,
-  'Optional chaining and nullish': `a?.b?.[c] ?? (d || e);
-`,
-  'Template literals': 'tag`a${b}c${d}e`;\n',
-  'Async / await / generators': `async function f() {
-  for await (const x of src) {
-    yield x;
-  }
-}
-`,
-  'Modules': `import def, { named as alias } from "mod";
-export const x = 1;
-export default function () {}
-`,
-};
 
 const statusEl = document.getElementById('status');
 const treeEl = document.getElementById('tree');
@@ -205,7 +147,7 @@ examplesEl.addEventListener('change', () => {
   }
   const src = EXAMPLES[name];
   editor.setValue(src);
-  if (name === 'Modules') {
+  if (EXAMPLE_MODULE_GOAL[name]) {
     moduleEl.checked = true;
   }
   examplesEl.value = '';

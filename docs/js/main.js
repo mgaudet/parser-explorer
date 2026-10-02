@@ -176010,6 +176010,95 @@ function renderTree(container, root, onSelect) {
 
 
 
+;// ./web/examples.js
+// Seed programs for the explorer. Kept in a module of their own so the UI and
+// the offline validator (validate_examples.mjs) exercise the same sources.
+
+const EXAMPLES = {
+  'Arithmetic and precedence': `1 + 2 * 3 - 4 / 2;
+`,
+
+  'Associative operators': `// The parser builds a left-leaning tree for
+// associative operators like + and &&.
+a + b + c + d;
+x && y && z;
+`,
+
+  'Functions and arrow bodies': `function outer(a, b = 1) {
+  return (x) => x * a + b;
+}
+`,
+
+  'Destructuring': `const { a, b: { c } } = obj;
+const [first, , ...rest] = list;
+`,
+
+  'Classes': `class Point {
+  static origin = new Point(0, 0);
+  #hidden = 1;
+  constructor(x, y) {
+    this.x = x;
+    this.y = y;
+  }
+  get length() { return Math.hypot(this.x, this.y); }
+}
+`,
+
+  'Control flow': `for (const x of items) {
+  if (x > 0) {
+    continue;
+  } else {
+    break;
+  }
+}
+switch (v) {
+  case 1: f(); break;
+  default: g();
+}
+`,
+
+  'try / catch / finally': `try {
+  risky();
+} catch (e) {
+  handle(e);
+} finally {
+  cleanup();
+}
+`,
+
+  'Optional chaining and nullish': `a?.b?.[c] ?? (d || e);
+`,
+
+  'Template literals': 'tag`a${b}c${d}e`;\n',
+
+  'Async and generators': `async function fetchAll(urls) {
+  const out = [];
+  for await (const x of urls) {
+    out.push(await load(x));
+  }
+  return out;
+}
+
+function* range(n) {
+  for (let i = 0; i < n; i++) {
+    yield i;
+  }
+}
+`,
+
+  'Modules': `import def, { named as alias } from "mod";
+export const x = 1;
+export default function () {}
+`,
+};
+
+// Examples that are only valid as modules, so the UI can switch goals for them.
+const EXAMPLE_MODULE_GOAL = {
+  Modules: true,
+};
+
+
+
 // EXTERNAL MODULE: ../node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js
 var injectStylesIntoStyleTag = __webpack_require__(95292);
 var injectStylesIntoStyleTag_default = /*#__PURE__*/__webpack_require__.n(injectStylesIntoStyleTag);
@@ -176064,6 +176153,7 @@ var update = injectStylesIntoStyleTag_default()(style/* default */.A, options);
 
 
 
+
 self.MonacoEnvironment = {
   getWorkerUrl: function (moduleId, label) {
     if (label === 'javascript' || label === 'typescript') {
@@ -176083,65 +176173,6 @@ function greet(name) {
 greet("world");
 `;
 
-const EXAMPLES = {
-  'Arithmetic and precedence': `1 + 2 * 3 - 4 / 2;
-`,
-  'Associative operators': `// The parser builds a left-leaning tree for
-// associative operators like + and &&.
-a + b + c + d;
-x && y && z;
-`,
-  'Functions and arrow bodies': `function outer(a, b = 1) {
-  return (x) => x * a + b;
-}
-`,
-  'Destructuring': `const { a, b: { c } } = obj;
-const [first, , ...rest] = list;
-`,
-  'Classes': `class Point {
-  static origin = new Point(0, 0);
-  #hidden = 1;
-  constructor(x, y) {
-    this.x = x;
-    this.y = y;
-  }
-  get length() { return Math.hypot(this.x, this.y); }
-}
-`,
-  'Control flow': `for (const x of items) {
-  if (x > 0) {
-    continue;
-  } else {
-    break;
-  }
-}
-switch (v) {
-  case 1: f(); break;
-  default: g();
-}
-`,
-  'try / catch / finally': `try {
-  risky();
-} catch (e) {
-  handle(e);
-} finally {
-  cleanup();
-}
-`,
-  'Optional chaining and nullish': `a?.b?.[c] ?? (d || e);
-`,
-  'Template literals': 'tag`a${b}c${d}e`;\n',
-  'Async / await / generators': `async function f() {
-  for await (const x of src) {
-    yield x;
-  }
-}
-`,
-  'Modules': `import def, { named as alias } from "mod";
-export const x = 1;
-export default function () {}
-`,
-};
 
 const statusEl = document.getElementById('status');
 const treeEl = document.getElementById('tree');
@@ -176267,7 +176298,7 @@ examplesEl.addEventListener('change', () => {
   }
   const src = EXAMPLES[name];
   editor.setValue(src);
-  if (name === 'Modules') {
+  if (EXAMPLE_MODULE_GOAL[name]) {
     moduleEl.checked = true;
   }
   examplesEl.value = '';
